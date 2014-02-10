@@ -27,7 +27,7 @@
   function onOpen(evt)
   {
     writeToScreen("CONNECTED");
-    doSend("WebSockets enabled?");
+    doSend("WebSockets enabled");
   }
 
   function onClose(evt)
@@ -48,7 +48,7 @@
 
   function doSend(message)
   {
-    writeToScreen("SENT: " + message); 
+    writeToScreen("SENT: " + message + "?"); 
     websocket.send(message);
   }
 
