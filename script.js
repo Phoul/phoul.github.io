@@ -1,18 +1,24 @@
 // Links with categories
 const linkSections = [
     {
+        title: "Code",
+        links: [
+            { text: "Github", url: "https://github.com/phoul", icon: "fa-brands fa-github" },
+        ]
+    },
+    {
         title: "Social Media",
         links: [
-            { text: "Phoul", url: "https://bsky.app/profile/phoul.bsky.social", icon: "fa-solid fa-circle-user" },
-            { text: "Noire Networks", url: "https://bsky.app/profile/noirenetworks.bsky.social", icon: "fa-solid fa-circle-user" },
+            { text: "Phoul", url: "https://bsky.app/profile/phoul.bsky.social", icon: "fa-brands fa-bluesky" },
+            { text: "Noire Networks", url: "https://bsky.app/profile/noirenetworks.bsky.social", icon: "fa-brands fa-bluesky" },
             { text: "MyAnimeList", url: "https://myanimelist.com/profile/opprimereu", icon: "fas fa-tv" }
         ],
         subsections: [
             {
                 title: "Bots",
                 links: [
-                    { text: "Color Maps", url: "https://bsky.app/profile/colormaps.bsky.social", icon: "fa-solid fa-circle-user" },
-                    { text: "The Chaos Carpet", url: "https://bsky.app/profile/chaoscarpet.bsky.social", icon: "fa-solid fa-circle-user" }
+                    { text: "Color Maps", url: "https://bsky.app/profile/colormaps.bsky.social", icon: "fa-brands fa-bluesky" },
+                    { text: "The Chaos Carpet", url: "https://bsky.app/profile/chaoscarpet.bsky.social", icon: "fa-brands fa-bluesky" }
                 ]
             }
         ]
