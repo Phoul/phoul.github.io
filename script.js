@@ -7,6 +7,12 @@ const linkSections = [
         ]
     },
     {
+        title: "Gaming",
+        links: [
+            { text: "Twitch", url: "https://twitch.tv/opprimereu", icon: "fa-brands fa-twitch" },
+        ]
+    },
+    {
         title: "Social Media",
         links: [
             { text: "Phoul", url: "https://bsky.app/profile/phoul.bsky.social", icon: "fa-brands fa-bluesky" },
