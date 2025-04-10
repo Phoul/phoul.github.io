@@ -5,7 +5,6 @@ const linkSections = [
         links: [
             { text: "Phoul", url: "https://bsky.app/profile/phoul.bsky.social", icon: "fa-solid fa-circle-user" },
             { text: "Noire Networks", url: "https://bsky.app/profile/noirenetworks.bsky.social", icon: "fa-solid fa-circle-user" },
-            { text: "Last.fm", url: "https://www.last.fm/user/opprimereu", icon: "fas fa-music" },
             { text: "MyAnimeList", url: "https://myanimelist.com/profile/opprimereu", icon: "fas fa-tv" }
         ],
         subsections: [
