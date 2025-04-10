@@ -17,7 +17,7 @@ const linkSections = [
         links: [
             { text: "Phoul", url: "https://bsky.app/profile/phoul.bsky.social", icon: "fa-brands fa-bluesky" },
             { text: "Noire Networks", url: "https://bsky.app/profile/noirenetworks.bsky.social", icon: "fa-brands fa-bluesky" },
-            { text: "MyAnimeList", url: "https://myanimelist.com/profile/opprimereu", icon: "fas fa-tv" }
+            { text: "MyAnimeList", url: "https://myanimelist.com/profile/opprimereu", icon: "fas fa-tv" },
             { text: "StoryGraph", url: "https://app.thestorygraph.com/profile/phoul", icon: "fa-solid fa-book" }
         ],
         subsections: [
