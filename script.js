@@ -3,13 +3,13 @@ const linkSections = [
     {
         title: "Code",
         links: [
-            { text: "Github", url: "https://github.com/phoul", icon: "fa-brands fa-github" },
+            { text: "Github", url: "https://github.com/phoul", icon: "fa-brands fa-github" }
         ]
     },
     {
         title: "Gaming",
         links: [
-            { text: "Twitch", url: "https://twitch.tv/opprimereu", icon: "fa-brands fa-twitch" },
+            { text: "Twitch", url: "https://twitch.tv/opprimereu", icon: "fa-brands fa-twitch" }
         ]
     },
     {
