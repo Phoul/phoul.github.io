@@ -33,7 +33,7 @@ const linkSections = [
     {
         title: "Volunteering",
         links: [
-            { text: "Preventathon", url: "https://preventathon.com", icon: "fas fa-shield-alt" },
+            { text: "Prevent-A-Thon", url: "https://preventathon.com", icon: "fas fa-shield-alt" },
             { text: "Coldhak", url: "https://coldhak.ca", icon: "fas fa-snowflake" }
         ]
     }
