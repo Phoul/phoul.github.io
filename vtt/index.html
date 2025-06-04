@@ -39,7 +39,7 @@
             border-radius: 16px;
             padding: 48px;
             box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
-            max-width: 800px;
+            max-width: 900px;
             width: 100%;
             text-align: center;
             position: relative;
@@ -84,11 +84,45 @@
             font-size: 14px;
         }
 
+        .input-methods {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .input-method {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .input-method:hover {
+            border-color: #4a90e2;
+            background: #252525;
+        }
+
+        .input-method.active {
+            border-color: #4a90e2;
+            background: rgba(74, 144, 226, 0.05);
+        }
+
+        .method-title {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .file-input-wrapper {
             position: relative;
             display: inline-block;
             cursor: pointer;
-            margin-bottom: 32px;
             width: 100%;
         }
 
@@ -102,40 +136,67 @@
 
         .file-input-label {
             display: block;
-            padding: 20px 32px;
-            background: #1a1a1a;
+            padding: 20px 24px;
+            background: #0f0f0f;
             border: 2px dashed #444;
-            border-radius: 12px;
+            border-radius: 8px;
             color: #a0a0a0;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 500;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
 
         .file-input-label::before {
             content: '📁';
             display: block;
-            font-size: 24px;
+            font-size: 20px;
             margin-bottom: 8px;
         }
 
         .file-input-label:hover {
-            background: #252525;
+            background: #1a1a1a;
             border-color: #4a90e2;
             color: #4a90e2;
-            transform: translateY(-2px);
         }
 
         .file-input-label.active {
-            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            background: rgba(74, 144, 226, 0.1);
             border-color: #4a90e2;
-            color: white;
+            color: #4a90e2;
         }
 
         .file-input-label.active::before {
             content: '✓';
+        }
+
+        .paste-textarea {
+            width: 100%;
+            height: 200px;
+            background: #0f0f0f;
+            border: 2px dashed #444;
+            border-radius: 8px;
+            padding: 16px;
+            color: #ffffff;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        .paste-textarea:focus {
+            outline: none;
+            border-color: #4a90e2;
+            background: #1a1a1a;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+
+        .paste-textarea:not(:placeholder-shown) {
+            border-color: #4a90e2;
+            background: rgba(74, 144, 226, 0.05);
         }
 
         .btn {
@@ -223,21 +284,14 @@
             border-left-color: #ef4444;
         }
 
-        .download-section {
-            display: none;
-            margin-top: 32px;
-            padding-top: 32px;
-            border-top: 1px solid #333;
-        }
-
         .file-name {
-            margin-top: 16px;
-            font-size: 14px;
+            margin-top: 12px;
+            font-size: 12px;
             color: #4a90e2;
             font-weight: 600;
-            padding: 8px 16px;
+            padding: 6px 12px;
             background: rgba(74, 144, 226, 0.1);
-            border-radius: 8px;
+            border-radius: 6px;
             display: inline-block;
         }
 
@@ -331,10 +385,32 @@
             flex-wrap: wrap;
         }
 
-        @media (max-width: 640px) {
+        .clear-btn {
+            background: none;
+            border: 1px solid #666;
+            color: #a0a0a0;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+
+        .clear-btn:hover {
+            border-color: #4a90e2;
+            color: #4a90e2;
+        }
+
+        @media (max-width: 768px) {
             .container {
                 padding: 32px 24px;
                 margin: 16px;
+            }
+
+            .input-methods {
+                grid-template-columns: 1fr;
+                gap: 16px;
             }
 
             h1 {
@@ -344,10 +420,6 @@
             .btn {
                 min-width: 160px;
                 padding: 14px 24px;
-            }
-
-            .file-input-label {
-                padding: 18px 24px;
             }
 
             .output-header {
@@ -402,20 +474,43 @@
     <div class="container">
         <div class="feature-badge">VTT Time Shifter</div>
         <h1>Subtitle Time Shifter</h1>
-        <p class="subtitle">Select a VTT file to shift all subtitles</p>
+        <p class="subtitle">Upload a VTT file or paste VTT content to shift all subtitles</p>
         
         <div class="config-display" id="configDisplay">
             Current Offset: +1.45 seconds (+1450ms)
         </div>
         
-        <div class="file-input-wrapper">
-            <input type="file" id="vttFile" class="file-input" accept=".vtt">
-            <label for="vttFile" class="file-input-label" id="fileLabel">
-                Select VTT File
-            </label>
+        <div class="input-methods">
+            <div class="input-method" id="fileMethod">
+                <div class="method-title">📁 Upload File</div>
+                <div class="file-input-wrapper">
+                    <input type="file" id="vttFile" class="file-input" accept=".vtt">
+                    <label for="vttFile" class="file-input-label" id="fileLabel">
+                        Select VTT File
+                    </label>
+                </div>
+                <div class="file-name" id="fileName"></div>
+            </div>
+            
+            <div class="input-method" id="pasteMethod">
+                <div class="method-title">📝 Paste Content</div>
+                <textarea 
+                    id="pasteArea" 
+                    class="paste-textarea" 
+                    placeholder="Paste your VTT content here...
+
+Example:
+WEBVTT
+
+00:00:01.000 --> 00:00:04.000
+Hello world
+
+00:00:05.000 --> 00:00:08.000
+This is a subtitle"
+                ></textarea>
+                <button class="clear-btn" id="clearBtn">Clear</button>
+            </div>
         </div>
-        
-        <div class="file-name" id="fileName"></div>
         
         <button id="processBtn" class="btn" disabled>Shift Timestamps</button>
         
@@ -440,6 +535,8 @@
                 this.fileInput = document.getElementById('vttFile');
                 this.fileLabel = document.getElementById('fileLabel');
                 this.fileName = document.getElementById('fileName');
+                this.pasteArea = document.getElementById('pasteArea');
+                this.clearBtn = document.getElementById('clearBtn');
                 this.processBtn = document.getElementById('processBtn');
                 this.status = document.getElementById('status');
                 this.outputSection = document.getElementById('outputSection');
@@ -447,16 +544,22 @@
                 this.copyBtn = document.getElementById('copyBtn');
                 this.downloadLink = document.getElementById('downloadLink');
                 this.configDisplay = document.getElementById('configDisplay');
+                this.fileMethod = document.getElementById('fileMethod');
+                this.pasteMethod = document.getElementById('pasteMethod');
                 
                 this.originalContent = '';
                 this.modifiedContent = '';
-                this.timeShiftOffset = TIME_SHIFT_OFFSET; // Use the configured offset
+                this.timeShiftOffset = TIME_SHIFT_OFFSET;
+                this.currentInputMethod = null; // 'file' or 'paste'
                 
                 this.init();
             }
             
             init() {
                 this.fileInput.addEventListener('change', this.handleFileSelect.bind(this));
+                this.pasteArea.addEventListener('input', this.handlePasteInput.bind(this));
+                this.pasteArea.addEventListener('focus', this.handlePasteFocus.bind(this));
+                this.clearBtn.addEventListener('click', this.clearPasteArea.bind(this));
                 this.processBtn.addEventListener('click', this.processFile.bind(this));
                 this.copyBtn.addEventListener('click', this.copyToClipboard.bind(this));
                 
@@ -478,26 +581,88 @@
                 // Update button text
                 this.processBtn.textContent = `Shift Timestamps (${sign}${this.timeShiftOffset}s)`;
             }
+
+            setInputMethod(method) {
+                this.currentInputMethod = method;
+                
+                // Update visual indicators
+                this.fileMethod.classList.toggle('active', method === 'file');
+                this.pasteMethod.classList.toggle('active', method === 'paste');
+                
+                // Clear the other method
+                if (method === 'file') {
+                    this.pasteArea.value = '';
+                } else if (method === 'paste') {
+                    this.fileInput.value = '';
+                    this.fileLabel.textContent = 'Select VTT File';
+                    this.fileLabel.classList.remove('active');
+                    this.fileName.style.display = 'none';
+                }
+                
+                this.checkInputValidity();
+            }
+
+            checkInputValidity() {
+                const hasFileInput = this.fileInput.files.length > 0;
+                const hasPasteInput = this.pasteArea.value.trim().length > 0;
+                
+                this.processBtn.disabled = !(hasFileInput || hasPasteInput);
+                
+                // Set content based on active method
+                if (hasFileInput && this.currentInputMethod === 'file') {
+                    // Content will be set by file reader
+                } else if (hasPasteInput && this.currentInputMethod === 'paste') {
+                    this.originalContent = this.pasteArea.value;
+                } else {
+                    this.originalContent = '';
+                }
+            }
+
+            handlePasteFocus() {
+                this.setInputMethod('paste');
+            }
+
+            handlePasteInput() {
+                this.setInputMethod('paste');
+                this.hideStatus();
+                this.outputSection.style.display = 'none';
+                this.checkInputValidity();
+            }
+
+            clearPasteArea() {
+                this.pasteArea.value = '';
+                this.originalContent = '';
+                this.checkInputValidity();
+                this.hideStatus();
+                this.outputSection.style.display = 'none';
+                
+                // Remove active state if paste area is cleared
+                if (this.currentInputMethod === 'paste') {
+                    this.pasteMethod.classList.remove('active');
+                    this.currentInputMethod = null;
+                }
+            }
             
             handleFileSelect(event) {
                 const file = event.target.files[0];
                 
                 if (!file) {
-                    this.resetUI();
+                    this.resetFileUI();
                     return;
                 }
                 
                 if (!file.name.toLowerCase().endsWith('.vtt')) {
                     this.showStatus('Please select a valid VTT file.', 'error');
-                    this.resetUI();
+                    this.resetFileUI();
                     return;
                 }
+
+                this.setInputMethod('file');
                 
                 this.fileLabel.textContent = 'VTT File Selected';
                 this.fileLabel.classList.add('active');
                 this.fileName.textContent = file.name;
                 this.fileName.style.display = 'inline-block';
-                this.processBtn.disabled = false;
                 this.hideStatus();
                 this.outputSection.style.display = 'none';
                 
@@ -508,6 +673,7 @@
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     this.originalContent = e.target.result;
+                    this.checkInputValidity();
                 };
                 reader.onerror = () => {
                     this.showStatus('Error reading file. Please try again.', 'error');
@@ -517,7 +683,13 @@
             
             processFile() {
                 if (!this.originalContent) {
-                    this.showStatus('Please wait for the file to load completely.', 'error');
+                    this.showStatus('Please provide VTT content via file upload or paste.', 'error');
+                    return;
+                }
+
+                // Basic VTT validation
+                if (!this.originalContent.includes('-->')) {
+                    this.showStatus('Invalid VTT content. Please make sure your content includes timestamp lines (e.g., "00:00:01.000 --> 00:00:04.000").', 'error');
                     return;
                 }
                 
@@ -544,7 +716,7 @@
                     }, 500);
                     
                 } catch (error) {
-                    this.showStatus(`Error processing file: ${error.message}`, 'error');
+                    this.showStatus(`Error processing content: ${error.message}`, 'error');
                     this.processBtn.disabled = false;
                     this.updateUIWithOffset(); // Restore button text
                     this.processBtn.classList.remove('processing');
@@ -668,12 +840,18 @@
                 const blob = new Blob([this.modifiedContent], { type: 'text/vtt' });
                 const url = URL.createObjectURL(blob);
                 
-                const originalFileName = this.fileInput.files[0].name;
-                const offsetStr = this.timeShiftOffset >= 0 ? `+${this.timeShiftOffset}` : `${this.timeShiftOffset}`;
-                const newFileName = originalFileName.replace('.vtt', `_shifted${offsetStr}s.vtt`);
+                let fileName;
+                if (this.currentInputMethod === 'file' && this.fileInput.files[0]) {
+                    const originalFileName = this.fileInput.files[0].name;
+                    const offsetStr = this.timeShiftOffset >= 0 ? `+${this.timeShiftOffset}` : `${this.timeShiftOffset}`;
+                    fileName = originalFileName.replace('.vtt', `_shifted${offsetStr}s.vtt`);
+                } else {
+                    const offsetStr = this.timeShiftOffset >= 0 ? `+${this.timeShiftOffset}` : `${this.timeShiftOffset}`;
+                    fileName = `subtitles_shifted${offsetStr}s.vtt`;
+                }
                 
                 this.downloadLink.href = url;
-                this.downloadLink.download = newFileName;
+                this.downloadLink.download = fileName;
                 
                 // Clean up previous URL
                 if (this.downloadLink.dataset.previousUrl) {
@@ -691,12 +869,21 @@
             hideStatus() {
                 this.status.style.display = 'none';
             }
-            
-            resetUI() {
+
+            resetFileUI() {
                 this.fileLabel.textContent = 'Select VTT File';
                 this.fileLabel.classList.remove('active');
                 this.fileName.textContent = '';
                 this.fileName.style.display = 'none';
+                this.checkInputValidity();
+            }
+            
+            resetUI() {
+                this.resetFileUI();
+                this.pasteArea.value = '';
+                this.fileMethod.classList.remove('active');
+                this.pasteMethod.classList.remove('active');
+                this.currentInputMethod = null;
                 this.processBtn.disabled = true;
                 this.outputSection.style.display = 'none';
                 this.originalContent = '';
