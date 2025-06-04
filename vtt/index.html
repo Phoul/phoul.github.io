@@ -27,9 +27,10 @@
             color: #ffffff;
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 20px 20px 80px 20px; /* Added bottom padding for footer */
             line-height: 1.6;
         }
 
@@ -44,6 +45,7 @@
             text-align: center;
             position: relative;
             overflow: hidden;
+            flex: 1;
         }
 
         .container::before {
@@ -402,6 +404,46 @@
             color: #4a90e2;
         }
 
+        /* Footer Styles */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            border-top: 1px solid #333;
+            padding: 12px 20px;
+            text-align: center;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 13px;
+            font-weight: 400;
+            color: #a0a0a0;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .footer .heart {
+            color: #ef4444;
+            font-weight: 600;
+            animation: heartbeat 2s ease-in-out infinite;
+        }
+
+        .footer .username {
+            color: #4a90e2;
+            font-weight: 600;
+        }
+
+        @keyframes heartbeat {
+            0%, 50%, 100% {
+                transform: scale(1);
+            }
+            25%, 75% {
+                transform: scale(1.1);
+            }
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 32px 24px;
@@ -435,6 +477,15 @@
 
             .btn {
                 margin: 6px 0;
+            }
+
+            .footer {
+                padding: 10px 16px;
+                font-size: 12px;
+            }
+
+            body {
+                padding: 20px 20px 60px 20px; /* Reduced bottom padding on mobile */
             }
         }
 
@@ -527,6 +578,11 @@ This is a subtitle"
                 <a id="downloadLink" class="btn" download>💾 Download VTT File</a>
             </div>
         </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        Made with <span class="heart">&lt;3</span> by <span class="username">Colin "Opprimereu" C.</span>
     </div>
 
     <script>
