@@ -39,7 +39,7 @@
             border-radius: 16px;
             padding: 48px;
             box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
-            max-width: 580px;
+            max-width: 800px;
             width: 100%;
             text-align: center;
             position: relative;
@@ -156,6 +156,19 @@
             min-width: 200px;
         }
 
+        .btn.copy-btn {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            min-width: 120px;
+        }
+
+        .btn.copy-btn:hover {
+            box-shadow: 0 12px 24px rgba(34, 197, 94, 0.4);
+        }
+
+        .btn.copy-btn.copied {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
         .btn::before {
             content: '';
             position: absolute;
@@ -264,6 +277,60 @@
             border: 1px solid rgba(74, 144, 226, 0.2);
         }
 
+        .output-section {
+            display: none;
+            margin-top: 32px;
+            padding-top: 32px;
+            border-top: 1px solid #333;
+            text-align: left;
+        }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .output-title {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .output-textbox {
+            width: 100%;
+            height: 300px;
+            background: #0f0f0f;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 16px;
+            color: #ffffff;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+            resize: vertical;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .output-textbox:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+
+        .button-row {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
         @media (max-width: 640px) {
             .container {
                 padding: 32px 24px;
@@ -275,12 +342,27 @@
             }
 
             .btn {
-                min-width: 180px;
+                min-width: 160px;
                 padding: 14px 24px;
             }
 
             .file-input-label {
                 padding: 18px 24px;
+            }
+
+            .output-header {
+                flex-direction: column;
+                gap: 12px;
+                align-items: stretch;
+            }
+
+            .button-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                margin: 6px 0;
             }
         }
 
@@ -302,6 +384,17 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        /* Copy feedback animation */
+        @keyframes copySuccess {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .copy-success {
+            animation: copySuccess 0.3s ease-out;
         }
     </style>
 </head>
@@ -328,8 +421,16 @@
         
         <div id="status" class="status"></div>
         
-        <div id="downloadSection" class="download-section">
-            <a id="downloadLink" class="btn" download>Download Modified VTT</a>
+        <div id="outputSection" class="output-section">
+            <div class="output-header">
+                <h3 class="output-title">Modified VTT Content</h3>
+            </div>
+            <textarea id="outputText" class="output-textbox" readonly placeholder="Processed VTT content will appear here..."></textarea>
+            
+            <div class="button-row">
+                <button id="copyBtn" class="btn copy-btn">📋 Copy to Clipboard</button>
+                <a id="downloadLink" class="btn" download>💾 Download VTT File</a>
+            </div>
         </div>
     </div>
 
@@ -341,7 +442,9 @@
                 this.fileName = document.getElementById('fileName');
                 this.processBtn = document.getElementById('processBtn');
                 this.status = document.getElementById('status');
-                this.downloadSection = document.getElementById('downloadSection');
+                this.outputSection = document.getElementById('outputSection');
+                this.outputText = document.getElementById('outputText');
+                this.copyBtn = document.getElementById('copyBtn');
                 this.downloadLink = document.getElementById('downloadLink');
                 this.configDisplay = document.getElementById('configDisplay');
                 
@@ -355,6 +458,7 @@
             init() {
                 this.fileInput.addEventListener('change', this.handleFileSelect.bind(this));
                 this.processBtn.addEventListener('click', this.processFile.bind(this));
+                this.copyBtn.addEventListener('click', this.copyToClipboard.bind(this));
                 
                 // Update UI elements with configured offset
                 this.updateUIWithOffset();
@@ -395,7 +499,7 @@
                 this.fileName.style.display = 'inline-block';
                 this.processBtn.disabled = false;
                 this.hideStatus();
-                this.downloadSection.style.display = 'none';
+                this.outputSection.style.display = 'none';
                 
                 this.readFile(file);
             }
@@ -426,12 +530,13 @@
                     setTimeout(() => {
                         this.modifiedContent = this.shiftVTTTimestamps(this.originalContent, this.timeShiftOffset);
                         
+                        this.displayOutput();
                         this.createDownloadLink();
                         
                         const sign = this.timeShiftOffset >= 0 ? '+' : '';
-                        this.showStatus(`Timestamps shifted successfully by ${sign}${this.timeShiftOffset} seconds! Click download to get your modified file.`, 'success');
-                        this.downloadSection.style.display = 'block';
-                        this.downloadSection.classList.add('fade-in');
+                        this.showStatus(`Timestamps shifted successfully by ${sign}${this.timeShiftOffset} seconds! Copy the text below or download the file.`, 'success');
+                        this.outputSection.style.display = 'block';
+                        this.outputSection.classList.add('fade-in');
                         
                         this.processBtn.disabled = false;
                         this.updateUIWithOffset(); // Restore button text
@@ -443,6 +548,41 @@
                     this.processBtn.disabled = false;
                     this.updateUIWithOffset(); // Restore button text
                     this.processBtn.classList.remove('processing');
+                }
+            }
+
+            displayOutput() {
+                this.outputText.value = this.modifiedContent;
+                // Auto-select all text for easy copying
+                this.outputText.select();
+            }
+
+            async copyToClipboard() {
+                try {
+                    await navigator.clipboard.writeText(this.modifiedContent);
+                    
+                    // Visual feedback
+                    this.copyBtn.textContent = '✓ Copied!';
+                    this.copyBtn.classList.add('copied', 'copy-success');
+                    
+                    // Reset button after 2 seconds
+                    setTimeout(() => {
+                        this.copyBtn.textContent = '📋 Copy to Clipboard';
+                        this.copyBtn.classList.remove('copied', 'copy-success');
+                    }, 2000);
+                    
+                } catch (err) {
+                    // Fallback for older browsers
+                    this.outputText.select();
+                    document.execCommand('copy');
+                    
+                    this.copyBtn.textContent = '✓ Copied!';
+                    this.copyBtn.classList.add('copied', 'copy-success');
+                    
+                    setTimeout(() => {
+                        this.copyBtn.textContent = '📋 Copy to Clipboard';
+                        this.copyBtn.classList.remove('copied', 'copy-success');
+                    }, 2000);
                 }
             }
             
@@ -558,9 +698,10 @@
                 this.fileName.textContent = '';
                 this.fileName.style.display = 'none';
                 this.processBtn.disabled = true;
-                this.downloadSection.style.display = 'none';
+                this.outputSection.style.display = 'none';
                 this.originalContent = '';
                 this.modifiedContent = '';
+                this.outputText.value = '';
             }
         }
         
