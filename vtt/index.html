@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VTT Subtitle Time Shifter</title>
+    
+    <!-- ===== CONFIGURATION ===== -->
+    <script>
+        // Easy configuration - change this value to adjust the time shift offset
+        const TIME_SHIFT_OFFSET = 1.45; // Time shift in seconds (can be positive or negative)
+    </script>
+    <!-- ========================= -->
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 48px;
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+            max-width: 580px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #4a90e2, transparent);
+            opacity: 0.6;
+        }
+
+        h1 {
+            color: #ffffff;
+            margin-bottom: 12px;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            margin-bottom: 40px;
+            color: #a0a0a0;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .config-display {
+            background: rgba(74, 144, 226, 0.1);
+            border: 1px solid rgba(74, 144, 226, 0.2);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 32px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: #4a90e2;
+            font-size: 14px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            margin-bottom: 32px;
+            width: 100%;
+        }
+
+        .file-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 20px 32px;
+            background: #1a1a1a;
+            border: 2px dashed #444;
+            border-radius: 12px;
+            color: #a0a0a0;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-input-label::before {
+            content: '📁';
+            display: block;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .file-input-label:hover {
+            background: #252525;
+            border-color: #4a90e2;
+            color: #4a90e2;
+            transform: translateY(-2px);
+        }
+
+        .file-input-label.active {
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            border-color: #4a90e2;
+            color: white;
+        }
+
+        .file-input-label.active::before {
+            content: '✓';
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin: 12px;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+            min-width: 200px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(74, 144, 226, 0.4);
+        }
+
+        .btn:disabled {
+            background: #333;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.6;
+        }
+
+        .btn:disabled::before {
+            display: none;
+        }
+
+        .status {
+            margin: 24px 0;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            display: none;
+            border-left: 4px solid;
+        }
+
+        .status.success {
+            background: rgba(34, 197, 94, 0.1);
+            color: #4ade80;
+            border-left-color: #22c55e;
+        }
+
+        .status.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            border-left-color: #ef4444;
+        }
+
+        .download-section {
+            display: none;
+            margin-top: 32px;
+            padding-top: 32px;
+            border-top: 1px solid #333;
+        }
+
+        .file-name {
+            margin-top: 16px;
+            font-size: 14px;
+            color: #4a90e2;
+            font-weight: 600;
+            padding: 8px 16px;
+            background: rgba(74, 144, 226, 0.1);
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .processing {
+            position: relative;
+        }
+
+        .processing::after {
+            content: '';
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: translateY(-50%) rotate(360deg);
+            }
+        }
+
+        .feature-badge {
+            display: inline-block;
+            background: rgba(74, 144, 226, 0.1);
+            color: #4a90e2;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            border: 1px solid rgba(74, 144, 226, 0.2);
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 32px 24px;
+                margin: 16px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .btn {
+                min-width: 180px;
+                padding: 14px 24px;
+            }
+
+            .file-input-label {
+                padding: 18px 24px;
+            }
+        }
+
+        /* Smooth animations */
+        * {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="feature-badge">VTT Time Shifter</div>
+        <h1>Subtitle Time Shifter</h1>
+        <p class="subtitle">Upload a VTT file to shift all subtitles</p>
+        
+        <div class="config-display" id="configDisplay">
+            Current Offset: +1.45 seconds (+1450ms)
+        </div>
+        
+        <div class="file-input-wrapper">
+            <input type="file" id="vttFile" class="file-input" accept=".vtt">
+            <label for="vttFile" class="file-input-label" id="fileLabel">
+                Select VTT File
+            </label>
+        </div>
+        
+        <div class="file-name" id="fileName"></div>
+        
+        <button id="processBtn" class="btn" disabled>Shift Timestamps</button>
+        
+        <div id="status" class="status"></div>
+        
+        <div id="downloadSection" class="download-section">
+            <a id="downloadLink" class="btn" download>Download Modified VTT</a>
+        </div>
+    </div>
+
+    <script>
+        class VTTTimeShifter {
+            constructor() {
+                this.fileInput = document.getElementById('vttFile');
+                this.fileLabel = document.getElementById('fileLabel');
+                this.fileName = document.getElementById('fileName');
+                this.processBtn = document.getElementById('processBtn');
+                this.status = document.getElementById('status');
+                this.downloadSection = document.getElementById('downloadSection');
+                this.downloadLink = document.getElementById('downloadLink');
+                this.configDisplay = document.getElementById('configDisplay');
+                
+                this.originalContent = '';
+                this.modifiedContent = '';
+                this.timeShiftOffset = TIME_SHIFT_OFFSET; // Use the configured offset
+                
+                this.init();
+            }
+            
+            init() {
+                this.fileInput.addEventListener('change', this.handleFileSelect.bind(this));
+                this.processBtn.addEventListener('click', this.processFile.bind(this));
+                
+                // Update UI elements with configured offset
+                this.updateUIWithOffset();
+                
+                // Add fade-in animation to container
+                document.querySelector('.container').classList.add('fade-in');
+            }
+            
+            updateUIWithOffset() {
+                const offsetMs = this.timeShiftOffset * 1000;
+                const sign = this.timeShiftOffset >= 0 ? '+' : '';
+                const signMs = offsetMs >= 0 ? '+' : '';
+                
+                // Update config display
+                this.configDisplay.textContent = `Current Offset: ${sign}${this.timeShiftOffset} seconds (${signMs}${offsetMs}ms)`;
+                
+                // Update button text
+                this.processBtn.textContent = `Shift Timestamps (${sign}${this.timeShiftOffset}s)`;
+            }
+            
+            handleFileSelect(event) {
+                const file = event.target.files[0];
+                
+                if (!file) {
+                    this.resetUI();
+                    return;
+                }
+                
+                if (!file.name.toLowerCase().endsWith('.vtt')) {
+                    this.showStatus('Please select a valid VTT file.', 'error');
+                    this.resetUI();
+                    return;
+                }
+                
+                this.fileLabel.textContent = 'VTT File Selected';
+                this.fileLabel.classList.add('active');
+                this.fileName.textContent = file.name;
+                this.fileName.style.display = 'inline-block';
+                this.processBtn.disabled = false;
+                this.hideStatus();
+                this.downloadSection.style.display = 'none';
+                
+                this.readFile(file);
+            }
+            
+            readFile(file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.originalContent = e.target.result;
+                };
+                reader.onerror = () => {
+                    this.showStatus('Error reading file. Please try again.', 'error');
+                };
+                reader.readAsText(file);
+            }
+            
+            processFile() {
+                if (!this.originalContent) {
+                    this.showStatus('Please wait for the file to load completely.', 'error');
+                    return;
+                }
+                
+                try {
+                    this.processBtn.disabled = true;
+                    this.processBtn.textContent = 'Processing...';
+                    this.processBtn.classList.add('processing');
+                    
+                    // Add small delay to show loading animation
+                    setTimeout(() => {
+                        this.modifiedContent = this.shiftVTTTimestamps(this.originalContent, this.timeShiftOffset);
+                        
+                        this.createDownloadLink();
+                        
+                        const sign = this.timeShiftOffset >= 0 ? '+' : '';
+                        this.showStatus(`Timestamps shifted successfully by ${sign}${this.timeShiftOffset} seconds! Click download to get your modified file.`, 'success');
+                        this.downloadSection.style.display = 'block';
+                        this.downloadSection.classList.add('fade-in');
+                        
+                        this.processBtn.disabled = false;
+                        this.updateUIWithOffset(); // Restore button text
+                        this.processBtn.classList.remove('processing');
+                    }, 500);
+                    
+                } catch (error) {
+                    this.showStatus(`Error processing file: ${error.message}`, 'error');
+                    this.processBtn.disabled = false;
+                    this.updateUIWithOffset(); // Restore button text
+                    this.processBtn.classList.remove('processing');
+                }
+            }
+            
+            parseTimestamp(timestampStr) {
+                // Remove any whitespace
+                timestampStr = timestampStr.trim();
+                
+                let hours = 0, minutes = 0, seconds = 0, milliseconds = 0;
+                
+                // Check for different formats
+                if (timestampStr.includes(':')) {
+                    const parts = timestampStr.split(':');
+                    
+                    if (parts.length === 3) {
+                        // HH:MM:SS.mmm format
+                        hours = parseInt(parts[0]) || 0;
+                        minutes = parseInt(parts[1]) || 0;
+                        const secMs = parts[2].split('.');
+                        seconds = parseInt(secMs[0]) || 0;
+                        if (secMs[1]) {
+                            // Pad milliseconds to 3 digits
+                            milliseconds = parseInt(secMs[1].padEnd(3, '0').substring(0, 3)) || 0;
+                        }
+                    } else if (parts.length === 2) {
+                        // MM:SS.mmm format (no hours)
+                        minutes = parseInt(parts[0]) || 0;
+                        const secMs = parts[1].split('.');
+                        seconds = parseInt(secMs[0]) || 0;
+                        if (secMs[1]) {
+                            // Pad milliseconds to 3 digits
+                            milliseconds = parseInt(secMs[1].padEnd(3, '0').substring(0, 3)) || 0;
+                        }
+                    }
+                }
+                
+                // Convert to total milliseconds
+                return hours * 3600000 + minutes * 60000 + seconds * 1000 + milliseconds;
+            }
+            
+            formatTimestamp(totalMs) {
+                // Handle negative timestamps
+                if (totalMs < 0) {
+                    totalMs = 0;
+                }
+                
+                const hours = Math.floor(totalMs / 3600000);
+                const minutes = Math.floor((totalMs % 3600000) / 60000);
+                const seconds = Math.floor((totalMs % 60000) / 1000);
+                const ms = totalMs % 1000;
+                
+                // Always return full HH:MM:SS.mmm format
+                return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(ms).padStart(3, '0')}`;
+            }
+            
+            shiftVTTTimestamps(vttContent, shiftSeconds) {
+                // Find all VTT timestamp lines (format: timestamp --> timestamp)
+                const timestampLineRegex = /^([0-9:.]+)\s+-->\s+([0-9:.]+)(.*)$/gm;
+                
+                return vttContent.replace(timestampLineRegex, (match, startTime, endTime, rest) => {
+                    try {
+                        // Parse start and end timestamps
+                        const startMs = this.parseTimestamp(startTime);
+                        const endMs = this.parseTimestamp(endTime);
+                        
+                        // Add shift (convert seconds to milliseconds)
+                        const shiftMs = shiftSeconds * 1000;
+                        const newStartMs = startMs + shiftMs;
+                        const newEndMs = endMs + shiftMs;
+                        
+                        // Format back to timestamp strings
+                        const newStartTime = this.formatTimestamp(newStartMs);
+                        const newEndTime = this.formatTimestamp(newEndMs);
+                        
+                        return `${newStartTime} --> ${newEndTime}${rest}`;
+                    } catch (error) {
+                        console.warn('Error processing timestamp line:', match, error);
+                        return match; // Return original if there's an error
+                    }
+                });
+            }
+            
+            createDownloadLink() {
+                const blob = new Blob([this.modifiedContent], { type: 'text/vtt' });
+                const url = URL.createObjectURL(blob);
+                
+                const originalFileName = this.fileInput.files[0].name;
+                const offsetStr = this.timeShiftOffset >= 0 ? `+${this.timeShiftOffset}` : `${this.timeShiftOffset}`;
+                const newFileName = originalFileName.replace('.vtt', `_shifted${offsetStr}s.vtt`);
+                
+                this.downloadLink.href = url;
+                this.downloadLink.download = newFileName;
+                
+                // Clean up previous URL
+                if (this.downloadLink.dataset.previousUrl) {
+                    URL.revokeObjectURL(this.downloadLink.dataset.previousUrl);
+                }
+                this.downloadLink.dataset.previousUrl = url;
+            }
+            
+            showStatus(message, type) {
+                this.status.textContent = message;
+                this.status.className = `status ${type} fade-in`;
+                this.status.style.display = 'block';
+            }
+            
+            hideStatus() {
+                this.status.style.display = 'none';
+            }
+            
+            resetUI() {
+                this.fileLabel.textContent = 'Select VTT File';
+                this.fileLabel.classList.remove('active');
+                this.fileName.textContent = '';
+                this.fileName.style.display = 'none';
+                this.processBtn.disabled = true;
+                this.downloadSection.style.display = 'none';
+                this.originalContent = '';
+                this.modifiedContent = '';
+            }
+        }
+        
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new VTTTimeShifter();
+        });
+    </script>
+</body>
+</html>
