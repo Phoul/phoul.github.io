@@ -4,7 +4,7 @@ const linkSections = [
         title: "Code",
         links: [
             { text: "Personal", url: "https://github.com/phoul", icon: "fa-brands fa-github" },
-            { text: "Noire Networks", url: "https://github.com/phoul", icon: "fa-brands fa-github" }
+            { text: "Noire Networks", url: "https://github.com/noirenetworks", icon: "fa-brands fa-github" }
 
         ]
     },
