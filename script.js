@@ -27,7 +27,9 @@ const linkSections = [
                 title: "Bots",
                 links: [
                     { text: "Color Maps", url: "https://bsky.app/profile/colormaps.bsky.social", icon: "fa-brands fa-bluesky" },
-                    { text: "The Chaos Carpet", url: "https://bsky.app/profile/chaoscarpet.bsky.social", icon: "fa-brands fa-bluesky" }
+                    { text: "The Chaos Carpet", url: "https://bsky.app/profile/chaoscarpet.bsky.social", icon: "fa-brands fa-bluesky" },
+                    { text: "The Update Herald", url: "https://bsky.app/profile/theupdateherald.bsky.social", icon: "fa-brands fa-bluesky" }
+
                 ]
             }
         ]
