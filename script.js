@@ -11,7 +11,9 @@ const linkSections = [
     {
         title: "Gaming",
         links: [
-            { text: "Twitch", url: "https://twitch.tv/opprimereu", icon: "fa-brands fa-twitch" }
+            { text: "Twitch", url: "https://twitch.tv/opprimereu", icon: "fa-brands fa-twitch" },
+            { text: "TGM Series", url: "https://theabsolute.plus/player/opprimereu", icon: "fa-solid fa-hat-wizard" }
+
         ]
     },
     {
