@@ -1,484 +1,143 @@
 {
-  "count": 6,
-  "next": null,
-  "previous": null,
   "results": [
     {
-      "type": "speedrun",
-      "id": 1,
-      "event": {
-        "type": "event",
-        "id": 1,
-        "short": "custom",
-        "name": "Custom Event",
-        "paypalcurrency": "USD",
-        "hashtag": "",
-        "datetime": "2025-06-05T12:00:00-04:00",
-        "timezone": "US/Eastern",
-        "receivername": "Custom Charity",
-        "receiver_short": "CC",
-        "receiver_solicitation_text": "",
-        "receiver_logo": "",
-        "receiver_privacy_policy": "",
-        "use_one_step_screening": true,
-        "locked": false,
-        "archived": false,
-        "draft": false,
-        "allow_donations": true
-      },
-      "name": "Opening Ceremony",
       "display_name": "Opening Ceremony",
-      "twitch_name": "Opening Ceremony",
-      "description": "",
       "category": "Hype%",
-      "coop": false,
-      "onsite": "ONSITE",
-      "console": "",
-      "release_year": null,
       "runners": [
         {
-          "type": "talent",
-          "id": 1,
           "name": "Staff",
-          "stream": "",
-          "twitter": "",
-          "youtube": "",
-          "platform": "TWITCH",
-          "pronouns": ""
+          "stream": ""
         }
       ],
       "hosts": [
         {
-          "type": "talent",
-          "id": 1,
           "name": "ProPokeNoob",
-          "stream": "https://twitch.tv/propokenoob",
-          "twitter": "",
-          "youtube": "",
-          "platform": "TWITCH",
-          "pronouns": ""
+          "stream": "https://twitch.tv/propokenoob"
         }
       ],
-      "commentators": [],
       "starttime": "2025-06-10T12:00:00-04:00",
       "endtime": "2025-06-10T12:15:00-04:00",
-      "order": 1,
       "run_time": "0:15:00",
-      "setup_time": "0:00:00",
-      "anchor_time": null,
-      "layout": "16x9_1P",
-      "video_links": [],
-      "priority_tag": null,
-      "tags": []
+      "video_links": []
     },
     {
-      "type": "speedrun",
-      "id": 2,
-      "event": {
-        "type": "event",
-        "id": 1,
-        "short": "custom",
-        "name": "Custom Event",
-        "paypalcurrency": "USD",
-        "hashtag": "",
-        "datetime": "2025-06-05T12:00:00-04:00",
-        "timezone": "US/Eastern",
-        "receivername": "Custom Charity",
-        "receiver_short": "CC",
-        "receiver_solicitation_text": "",
-        "receiver_logo": "",
-        "receiver_privacy_policy": "",
-        "use_one_step_screening": true,
-        "locked": false,
-        "archived": false,
-        "draft": false,
-        "allow_donations": true
-      },
-      "name": "Super Mario 64",
       "display_name": "Super Mario 64",
-      "twitch_name": "Super Mario 64",
-      "description": "",
       "category": "Any% 16 Star",
-      "coop": false,
-      "onsite": "ONSITE",
-      "console": "Nintendo 64",
-      "release_year": 1996,
       "runners": [
         {
-          "type": "talent",
-          "id": 1,
           "name": "SpeedRunner1",
-          "stream": "https://twitch.tv/speedrunner1",
-          "twitter": "",
-          "youtube": "",
-          "platform": "TWITCH",
-          "pronouns": ""
+          "stream": "https://twitch.tv/speedrunner1"
         }
       ],
       "hosts": [
         {
-          "type": "talent",
-          "id": 1,
           "name": "HostPerson",
-          "stream": "",
-          "twitter": "",
-          "youtube": "",
-          "platform": "TWITCH",
-          "pronouns": ""
-        }
-      ],
-      "commentators": [
-        {
-          "type": "talent",
-          "id": 1,
-          "name": "CommentatorGuy",
-          "stream": "",
-          "twitter": "",
-          "youtube": "",
-          "platform": "TWITCH",
-          "pronouns": ""
-        },
-        {
-          "type": "talent",
-          "id": 2,
-          "name": "CommentatorGal",
-          "stream": "https://twitch.tv/commentatorgal",
-          "twitter": "",
-          "youtube": "",
-          "platform": "TWITCH",
-          "pronouns": ""
+          "stream": ""
         }
       ],
       "starttime": "2025-06-10T12:15:00-04:00",
       "endtime": "2025-06-10T13:30:00-04:00",
-      "order": 2,
       "run_time": "1:07:00",
-      "setup_time": "0:08:00",
-      "anchor_time": null,
-      "layout": "16x9_1P",
       "video_links": [
         {
-          "id": 1,
-          "link_type": "Youtube",
           "url": "https://youtube.com/watch?v=example1"
         }
-      ],
-      "priority_tag": null,
-      "tags": []
+      ]
     },
     {
-      "type": "speedrun",
-      "id": 3,
-      "event": {
-        "type": "event",
-        "id": 1,
-        "short": "custom",
-        "name": "Custom Event",
-        "paypalcurrency": "USD",
-        "hashtag": "",
-        "datetime": "2025-06-05T12:00:00-04:00",
-        "timezone": "US/Eastern",
-        "receivername": "Custom Charity",
-        "receiver_short": "CC",
-        "receiver_solicitation_text": "",
-        "receiver_logo": "",
-        "receiver_privacy_policy": "",
-        "use_one_step_screening": true,
-        "locked": false,
-        "archived": false,
-        "draft": false,
-        "allow_donations": true
-      },
-      "name": "The Legend of Zelda: Ocarina of Time",
       "display_name": "The Legend of Zelda: Ocarina of Time",
-      "twitch_name": "The Legend of Zelda: Ocarina of Time",
-      "description": "",
       "category": "Any%",
-      "coop": false,
-      "onsite": "ONSITE",
-      "console": "Nintendo 64",
-      "release_year": 1998,
       "runners": [
         {
-          "type": "talent",
-          "id": 1,
           "name": "ZeldaMaster",
-          "stream": "https://twitch.tv/zeldamaster",
-          "twitter": "",
-          "youtube": "",
-          "platform": "TWITCH",
-          "pronouns": ""
+          "stream": "https://twitch.tv/zeldamaster"
         }
       ],
       "hosts": [
         {
-          "type": "talent",
-          "id": 1,
           "name": "HostPerson",
-          "stream": "",
-          "twitter": "",
-          "youtube": "",
-          "platform": "TWITCH",
-          "pronouns": ""
+          "stream": ""
         }
       ],
-      "commentators": [],
       "starttime": "2025-06-10T13:30:00-04:00",
       "endtime": "2025-06-10T15:45:00-04:00",
-      "order": 3,
       "run_time": "2:07:00",
-      "setup_time": "0:08:00",
-      "anchor_time": null,
-      "layout": "16x9_1P",
       "video_links": [
         {
-          "id": 1,
-          "link_type": "Youtube",
           "url": "https://youtube.com/watch?v=example2"
         }
-      ],
-      "priority_tag": null,
-      "tags": []
+      ]
     },
     {
-      "type": "speedrun",
-      "id": 4,
-      "event": {
-        "type": "event",
-        "id": 1,
-        "short": "custom",
-        "name": "Custom Event",
-        "paypalcurrency": "USD",
-        "hashtag": "",
-        "datetime": "2025-06-05T12:00:00-04:00",
-        "timezone": "US/Eastern",
-        "receivername": "Custom Charity",
-        "receiver_short": "CC",
-        "receiver_solicitation_text": "",
-        "receiver_logo": "",
-        "receiver_privacy_policy": "",
-        "use_one_step_screening": true,
-        "locked": false,
-        "archived": false,
-        "draft": false,
-        "allow_donations": true
-      },
-      "name": "Stardew Valley",
       "display_name": "Stardew Valley",
-      "twitch_name": "Stardew Valley",
-      "description": "",
       "category": "Community Center Co-op",
-      "coop": true,
-      "onsite": "ONSITE",
-      "console": "PC",
-      "release_year": 2016,
       "runners": [
         {
-          "type": "talent",
-          "id": 1,
           "name": "Player1",
-          "stream": "",
-          "twitter": "",
-          "youtube": "",
-          "platform": "TWITCH",
-          "pronouns": ""
+          "stream": ""
         },
         {
-          "type": "talent",
-          "id": 2,
           "name": "Player2",
-          "stream": "",
-          "twitter": "",
-          "youtube": "",
-          "platform": "TWITCH",
-          "pronouns": ""
+          "stream": ""
         },
         {
-          "type": "talent",
-          "id": 3,
           "name": "Player3",
-          "stream": "",
-          "twitter": "",
-          "youtube": "",
-          "platform": "TWITCH",
-          "pronouns": ""
+          "stream": ""
         },
         {
-          "type": "talent",
-          "id": 4,
           "name": "Player4",
-          "stream": "",
-          "twitter": "",
-          "youtube": "",
-          "platform": "TWITCH",
-          "pronouns": ""
+          "stream": ""
         }
       ],
       "hosts": [
         {
-          "type": "talent",
-          "id": 1,
           "name": "CoopHost",
-          "stream": "",
-          "twitter": "",
-          "youtube": "",
-          "platform": "TWITCH",
-          "pronouns": ""
-        }
-      ],
-      "commentators": [
-        {
-          "type": "talent",
-          "id": 1,
-          "name": "FarmExpert",
-          "stream": "",
-          "twitter": "",
-          "youtube": "",
-          "platform": "TWITCH",
-          "pronouns": ""
+          "stream": ""
         }
       ],
       "starttime": "2025-06-10T15:45:00-04:00",
       "endtime": "2025-06-10T18:30:00-04:00",
-      "order": 4,
       "run_time": "2:37:00",
-      "setup_time": "0:08:00",
-      "anchor_time": null,
-      "layout": "16x9_1P",
       "video_links": [
         {
-          "id": 1,
-          "link_type": "Youtube",
           "url": "https://youtube.com/watch?v=example3"
         }
-      ],
-      "priority_tag": null,
-      "tags": []
+      ]
     },
     {
-      "type": "speedrun",
-      "id": 5,
-      "event": {
-        "type": "event",
-        "id": 1,
-        "short": "custom",
-        "name": "Custom Event",
-        "paypalcurrency": "USD",
-        "hashtag": "",
-        "datetime": "2025-06-05T12:00:00-04:00",
-        "timezone": "US/Eastern",
-        "receivername": "Custom Charity",
-        "receiver_short": "CC",
-        "receiver_solicitation_text": "",
-        "receiver_logo": "",
-        "receiver_privacy_policy": "",
-        "use_one_step_screening": true,
-        "locked": false,
-        "archived": false,
-        "draft": false,
-        "allow_donations": true
-      },
-      "name": "Celeste",
       "display_name": "Celeste",
-      "twitch_name": "Celeste",
-      "description": "",
       "category": "Any%",
-      "coop": false,
-      "onsite": "ONSITE",
-      "console": "PC",
-      "release_year": 2018,
       "runners": [
         {
-          "type": "talent",
-          "id": 1,
           "name": "PlatformerPro",
-          "stream": "",
-          "twitter": "",
-          "youtube": "",
-          "platform": "TWITCH",
-          "pronouns": ""
+          "stream": ""
         }
       ],
       "hosts": [
         {
-          "type": "talent",
-          "id": 1,
           "name": "HostPerson",
-          "stream": "",
-          "twitter": "",
-          "youtube": "",
-          "platform": "TWITCH",
-          "pronouns": ""
+          "stream": ""
         }
       ],
-      "commentators": [],
       "starttime": "2025-06-10T18:30:00-04:00",
       "endtime": "2025-06-10T19:15:00-04:00",
-      "order": 5,
       "run_time": "0:37:00",
-      "setup_time": "0:08:00",
-      "anchor_time": null,
-      "layout": "16x9_1P",
-      "video_links": [],
-      "priority_tag": null,
-      "tags": []
+      "video_links": []
     },
     {
-      "type": "speedrun",
-      "id": 6,
-      "event": {
-        "type": "event",
-        "id": 1,
-        "short": "custom",
-        "name": "Custom Event",
-        "paypalcurrency": "USD",
-        "hashtag": "",
-        "datetime": "2025-06-05T12:00:00-04:00",
-        "timezone": "US/Eastern",
-        "receivername": "Custom Charity",
-        "receiver_short": "CC",
-        "receiver_solicitation_text": "",
-        "receiver_logo": "",
-        "receiver_privacy_policy": "",
-        "use_one_step_screening": true,
-        "locked": false,
-        "archived": false,
-        "draft": false,
-        "allow_donations": true
-      },
-      "name": "Sleep Block",
       "display_name": "Sleep Block",
-      "twitch_name": "Sleep Block",
-      "description": "",
       "category": "Pleasant Dreams%",
-      "coop": false,
-      "onsite": "ONSITE",
-      "console": "",
-      "release_year": null,
       "runners": [
         {
-          "type": "talent",
-          "id": 1,
           "name": "Staff",
-          "stream": "",
-          "twitter": "",
-          "youtube": "",
-          "platform": "TWITCH",
-          "pronouns": ""
+          "stream": ""
         }
       ],
       "hosts": [],
-      "commentators": [],
       "starttime": "2025-06-10T19:15:00-04:00",
       "endtime": "2025-06-11T07:15:00-04:00",
-      "order": 6,
       "run_time": "0",
-      "setup_time": "12:00:00",
-      "anchor_time": null,
-      "layout": "16x9_1P",
-      "video_links": [],
-      "priority_tag": null,
-      "tags": []
+      "video_links": []
     }
   ]
 }
