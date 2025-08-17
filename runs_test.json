@@ -470,13 +470,19 @@
       "hosts": [],
       "commentators": [],
       "starttime": "",
-      "endtime": "",
+      "endtime": "2025-06-10T19:15:00-04:00",
       "order": 6,
-      "run_time": "",
-      "setup_time": "12:00:00",
+      "run_time": "2025-06-11T07:15:00-04:00",
+      "setup_time": "0",
       "anchor_time": null,
       "layout": "16x9_1P",
-      "video_links": [],
+      "video_links": [
+        {
+          "id": 1,
+          "link_type": "Youtube",
+          "url": "12:00:00"
+        }
+      ],
       "priority_tag": null,
       "tags": []
     }
