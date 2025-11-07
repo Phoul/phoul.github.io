@@ -747,9 +747,18 @@ This is a subtitle"
                     return;
                 }
 
-                // Basic VTT validation
-                if (!this.originalContent.includes('-->')) {
-                    this.showStatus('Invalid VTT content. Please make sure your content includes timestamp lines (e.g., "00:00:01.000 --> 00:00:04.000").', 'error');
+                // Enhanced VTT validation - check for properly formatted timestamp lines with spaces around -->
+                const properTimestampRegex = /[0-9:.]+\s+-->\s+[0-9:.]+/;
+                const hasProperTimestamps = properTimestampRegex.test(this.originalContent);
+                
+                if (!hasProperTimestamps) {
+                    // Check if there are timestamps without proper spacing
+                    const improperTimestampRegex = /[0-9:.]+-->+[0-9:.]+/;
+                    if (improperTimestampRegex.test(this.originalContent)) {
+                        this.showStatus('Invalid VTT format. Timestamp lines must have spaces around the arrow. Use "00:00:01.000 --> 00:00:04.000" instead of "00:00:01.000-->00:00:04.000".', 'error');
+                    } else {
+                        this.showStatus('Invalid VTT content. Please make sure your content includes properly formatted timestamp lines (e.g., "00:00:01.000 --> 00:00:04.000").', 'error');
+                    }
                     return;
                 }
                 
