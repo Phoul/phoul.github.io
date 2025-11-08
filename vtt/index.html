@@ -34,7 +34,7 @@ Date: 2025-06-04
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px 20px 80px 20px; /* Added bottom padding for footer */
+            padding: 20px 20px 80px 20px;
             line-height: 1.6;
         }
 
@@ -408,7 +408,6 @@ Date: 2025-06-04
             color: #4a90e2;
         }
 
-        /* Footer Styles */
         .footer {
             position: fixed;
             bottom: 0;
@@ -489,11 +488,10 @@ Date: 2025-06-04
             }
 
             body {
-                padding: 20px 20px 60px 20px; /* Reduced bottom padding on mobile */
+                padding: 20px 20px 60px 20px;
             }
         }
 
-        /* Smooth animations */
         * {
             transition: opacity 0.3s ease, transform 0.3s ease;
         }
@@ -513,7 +511,6 @@ Date: 2025-06-04
             }
         }
 
-        /* Copy feedback animation */
         @keyframes copySuccess {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
@@ -584,7 +581,6 @@ This is a subtitle"
         </div>
     </div>
 
-    <!-- Footer -->
     <div class="footer">
         © 2025 | Made with <span class="heart">&lt;3</span> by <span class="username">Colin "Opprimereu" C.</span>
     </div>
@@ -610,7 +606,7 @@ This is a subtitle"
                 this.originalContent = '';
                 this.modifiedContent = '';
                 this.timeShiftOffset = TIME_SHIFT_OFFSET;
-                this.currentInputMethod = null; // 'file' or 'paste'
+                this.currentInputMethod = null;
                 
                 this.init();
             }
@@ -623,10 +619,7 @@ This is a subtitle"
                 this.processBtn.addEventListener('click', this.processFile.bind(this));
                 this.copyBtn.addEventListener('click', this.copyToClipboard.bind(this));
                 
-                // Update UI elements with configured offset
                 this.updateUIWithOffset();
-                
-                // Add fade-in animation to container
                 document.querySelector('.container').classList.add('fade-in');
             }
             
@@ -635,21 +628,16 @@ This is a subtitle"
                 const sign = this.timeShiftOffset >= 0 ? '+' : '';
                 const signMs = offsetMs >= 0 ? '+' : '';
                 
-                // Update config display
                 this.configDisplay.textContent = `Current Offset: ${sign}${this.timeShiftOffset} seconds (${signMs}${offsetMs}ms)`;
-                
-                // Update button text
                 this.processBtn.textContent = `Shift Timestamps (${sign}${this.timeShiftOffset}s)`;
             }
 
             setInputMethod(method) {
                 this.currentInputMethod = method;
                 
-                // Update visual indicators
                 this.fileMethod.classList.toggle('active', method === 'file');
                 this.pasteMethod.classList.toggle('active', method === 'paste');
                 
-                // Clear the other method
                 if (method === 'file') {
                     this.pasteArea.value = '';
                 } else if (method === 'paste') {
@@ -668,7 +656,6 @@ This is a subtitle"
                 
                 this.processBtn.disabled = !(hasFileInput || hasPasteInput);
                 
-                // Set content based on active method
                 if (hasFileInput && this.currentInputMethod === 'file') {
                     // Content will be set by file reader
                 } else if (hasPasteInput && this.currentInputMethod === 'paste') {
@@ -696,7 +683,6 @@ This is a subtitle"
                 this.hideStatus();
                 this.outputSection.style.display = 'none';
                 
-                // Remove active state if paste area is cleared
                 if (this.currentInputMethod === 'paste') {
                     this.pasteMethod.classList.remove('active');
                     this.currentInputMethod = null;
@@ -741,24 +727,107 @@ This is a subtitle"
                 reader.readAsText(file);
             }
             
+            validateWebVTT(content) {
+                // Remove BOM if present and split into lines
+                const lines = content.replace(/^\uFEFF/, '').split(/\r?\n/);
+                
+                // Rule 1: First non-empty line must be exactly "WEBVTT"
+                let firstNonEmptyLine = null;
+                let firstLineIndex = -1;
+                for (let i = 0; i < lines.length; i++) {
+                    const trimmed = lines[i].trim();
+                    if (trimmed) {
+                        firstNonEmptyLine = trimmed;
+                        firstLineIndex = i;
+                        break;
+                    }
+                }
+                
+                if (!firstNonEmptyLine) {
+                    return { valid: false, error: 'File is empty.' };
+                }
+                
+                if (firstNonEmptyLine !== 'WEBVTT') {
+                    return { 
+                        valid: false, 
+                        error: `Invalid WebVTT file. First line must be exactly "WEBVTT" (found "${firstNonEmptyLine}" on line ${firstLineIndex + 1}).`
+                    };
+                }
+                
+                // Rule 2: Check for any commas in timestamp context
+                // Commas should NEVER appear in WebVTT timestamps
+                if (/\d:\d{2}:\d{2},\d/.test(content)) {
+                    return {
+                        valid: false,
+                        error: 'Invalid WebVTT format. Timestamps must use periods (.) not commas (,) for milliseconds. Example: "00:00:01.000" not "00:00:01,000". This appears to be an SRT file.'
+                    };
+                }
+                
+                // Rule 3: Validate all timestamp lines
+                // Valid formats (can mix milliseconds on start/end):
+                // - HH:MM:SS.mmm --> HH:MM:SS.mmm
+                // - HH:MM:SS --> HH:MM:SS
+                // - HH:MM:SS.mmm --> HH:MM:SS
+                // - HH:MM:SS --> HH:MM:SS.mmm
+                
+                const validTimestamp = /^[0-9]{1,2}:[0-9]{2}:[0-9]{2}(\.[0-9]{3})?\s+-->\s+[0-9]{1,2}:[0-9]{2}:[0-9]{2}(\.[0-9]{3})?(\s|$)/;
+                
+                let foundTimestamp = false;
+                
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    
+                    // Skip empty lines
+                    if (!line) continue;
+                    
+                    // If line contains -->, it should be a timestamp line
+                    if (line.includes('-->')) {
+                        foundTimestamp = true;
+                        
+                        // Check if it matches valid format
+                        if (!validTimestamp.test(line)) {
+                            // Provide specific error messages
+                            if (!line.includes(' --> ')) {
+                                return {
+                                    valid: false,
+                                    error: `Invalid timestamp format on line ${i + 1}: "${line}". Timestamps must have spaces around the arrow. Use "00:00:01.000 --> 00:00:04.000" not "00:00:01.000-->00:00:04.000".`
+                                };
+                            } else if (line.includes(',')) {
+                                return {
+                                    valid: false,
+                                    error: `Invalid timestamp format on line ${i + 1}: "${line}". Timestamps must use periods (.) not commas (,) for milliseconds.`
+                                };
+                            } else {
+                                return {
+                                    valid: false,
+                                    error: `Invalid timestamp format on line ${i + 1}: "${line}". Valid formats are "HH:MM:SS.mmm --> HH:MM:SS.mmm" or "HH:MM:SS --> HH:MM:SS" (milliseconds optional).`
+                                };
+                            }
+                        }
+                    }
+                }
+                
+                // Rule 4: Must have at least one timestamp
+                if (!foundTimestamp) {
+                    return {
+                        valid: false,
+                        error: 'No valid timestamp lines found. WebVTT files must contain at least one timestamp line in the format "00:00:01.000 --> 00:00:04.000".'
+                    };
+                }
+                
+                return { valid: true };
+            }
+            
             processFile() {
                 if (!this.originalContent) {
                     this.showStatus('Please provide VTT content via file upload or paste.', 'error');
                     return;
                 }
 
-                // Enhanced VTT validation - check for properly formatted timestamp lines with spaces around -->
-                const properTimestampRegex = /[0-9:.]+\s+-->\s+[0-9:.]+/;
-                const hasProperTimestamps = properTimestampRegex.test(this.originalContent);
-                
-                if (!hasProperTimestamps) {
-                    // Check if there are timestamps without proper spacing
-                    const improperTimestampRegex = /[0-9:.]+-->+[0-9:.]+/;
-                    if (improperTimestampRegex.test(this.originalContent)) {
-                        this.showStatus('Invalid VTT format. Timestamp lines must have spaces around the arrow. Use "00:00:01.000 --> 00:00:04.000" instead of "00:00:01.000-->00:00:04.000".', 'error');
-                    } else {
-                        this.showStatus('Invalid VTT content. Please make sure your content includes properly formatted timestamp lines (e.g., "00:00:01.000 --> 00:00:04.000").', 'error');
-                    }
+                // Comprehensive WebVTT validation
+                const validation = this.validateWebVTT(this.originalContent);
+                if (!validation.valid) {
+                    this.showStatus(validation.error, 'error');
                     return;
                 }
                 
@@ -767,7 +836,6 @@ This is a subtitle"
                     this.processBtn.textContent = 'Processing...';
                     this.processBtn.classList.add('processing');
                     
-                    // Add small delay to show loading animation
                     setTimeout(() => {
                         this.modifiedContent = this.shiftVTTTimestamps(this.originalContent, this.timeShiftOffset);
                         
@@ -780,21 +848,20 @@ This is a subtitle"
                         this.outputSection.classList.add('fade-in');
                         
                         this.processBtn.disabled = false;
-                        this.updateUIWithOffset(); // Restore button text
+                        this.updateUIWithOffset();
                         this.processBtn.classList.remove('processing');
                     }, 500);
                     
                 } catch (error) {
                     this.showStatus(`Error processing content: ${error.message}`, 'error');
                     this.processBtn.disabled = false;
-                    this.updateUIWithOffset(); // Restore button text
+                    this.updateUIWithOffset();
                     this.processBtn.classList.remove('processing');
                 }
             }
 
             displayOutput() {
                 this.outputText.value = this.modifiedContent;
-                // Auto-select all text for easy copying
                 this.outputText.select();
             }
 
@@ -802,18 +869,15 @@ This is a subtitle"
                 try {
                     await navigator.clipboard.writeText(this.modifiedContent);
                     
-                    // Visual feedback
                     this.copyBtn.textContent = '✓ Copied!';
                     this.copyBtn.classList.add('copied', 'copy-success');
                     
-                    // Reset button after 2 seconds
                     setTimeout(() => {
                         this.copyBtn.textContent = '📋 Copy to Clipboard';
                         this.copyBtn.classList.remove('copied', 'copy-success');
                     }, 2000);
                     
                 } catch (err) {
-                    // Fallback for older browsers
                     this.outputText.select();
                     document.execCommand('copy');
                     
@@ -828,43 +892,35 @@ This is a subtitle"
             }
             
             parseTimestamp(timestampStr) {
-                // Remove any whitespace
                 timestampStr = timestampStr.trim();
                 
                 let hours = 0, minutes = 0, seconds = 0, milliseconds = 0;
                 
-                // Check for different formats
                 if (timestampStr.includes(':')) {
                     const parts = timestampStr.split(':');
                     
                     if (parts.length === 3) {
-                        // HH:MM:SS.mmm format
                         hours = parseInt(parts[0]) || 0;
                         minutes = parseInt(parts[1]) || 0;
                         const secMs = parts[2].split('.');
                         seconds = parseInt(secMs[0]) || 0;
                         if (secMs[1]) {
-                            // Pad milliseconds to 3 digits
                             milliseconds = parseInt(secMs[1].padEnd(3, '0').substring(0, 3)) || 0;
                         }
                     } else if (parts.length === 2) {
-                        // MM:SS.mmm format (no hours)
                         minutes = parseInt(parts[0]) || 0;
                         const secMs = parts[1].split('.');
                         seconds = parseInt(secMs[0]) || 0;
                         if (secMs[1]) {
-                            // Pad milliseconds to 3 digits
                             milliseconds = parseInt(secMs[1].padEnd(3, '0').substring(0, 3)) || 0;
                         }
                     }
                 }
                 
-                // Convert to total milliseconds
                 return hours * 3600000 + minutes * 60000 + seconds * 1000 + milliseconds;
             }
             
             formatTimestamp(totalMs) {
-                // Handle negative timestamps
                 if (totalMs < 0) {
                     totalMs = 0;
                 }
@@ -874,33 +930,31 @@ This is a subtitle"
                 const seconds = Math.floor((totalMs % 60000) / 1000);
                 const ms = totalMs % 1000;
                 
-                // Always return full HH:MM:SS.mmm format
+                // Always output with milliseconds
                 return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(ms).padStart(3, '0')}`;
             }
             
             shiftVTTTimestamps(vttContent, shiftSeconds) {
-                // Find all VTT timestamp lines (format: timestamp --> timestamp)
+                // Updated regex to handle optional milliseconds on both timestamps
                 const timestampLineRegex = /^([0-9:.]+)\s+-->\s+([0-9:.]+)(.*)$/gm;
                 
                 return vttContent.replace(timestampLineRegex, (match, startTime, endTime, rest) => {
                     try {
-                        // Parse start and end timestamps
                         const startMs = this.parseTimestamp(startTime);
                         const endMs = this.parseTimestamp(endTime);
                         
-                        // Add shift (convert seconds to milliseconds)
                         const shiftMs = shiftSeconds * 1000;
                         const newStartMs = startMs + shiftMs;
                         const newEndMs = endMs + shiftMs;
                         
-                        // Format back to timestamp strings
+                        // Always format with milliseconds
                         const newStartTime = this.formatTimestamp(newStartMs);
                         const newEndTime = this.formatTimestamp(newEndMs);
                         
                         return `${newStartTime} --> ${newEndTime}${rest}`;
                     } catch (error) {
                         console.warn('Error processing timestamp line:', match, error);
-                        return match; // Return original if there's an error
+                        return match;
                     }
                 });
             }
@@ -922,7 +976,6 @@ This is a subtitle"
                 this.downloadLink.href = url;
                 this.downloadLink.download = fileName;
                 
-                // Clean up previous URL
                 if (this.downloadLink.dataset.previousUrl) {
                     URL.revokeObjectURL(this.downloadLink.dataset.previousUrl);
                 }
@@ -961,7 +1014,6 @@ This is a subtitle"
             }
         }
         
-        // Initialize the application when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
             new VTTTimeShifter();
         });
