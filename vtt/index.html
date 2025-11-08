@@ -747,21 +747,7 @@ This is a subtitle"
                     return;
                 }
 
-                // Validation 1: Check for WEBVTT header (allow for BOM and whitespace)
-                const contentTrimmed = this.originalContent.replace(/^\uFEFF/, '').trim();
-                if (!contentTrimmed.match(/^WEBVTT/i)) {
-                    this.showStatus('Invalid VTT file. The file must start with "WEBVTT" header. This tool only supports WebVTT format, not SRT or other subtitle formats.', 'error');
-                    return;
-                }
-
-                // Validation 2: Check for timestamps with commas (SRT format) instead of periods (VTT format)
-                const srtTimestampRegex = /[0-9]+:[0-9]+:[0-9]+,[0-9]+/;
-                if (srtTimestampRegex.test(this.originalContent)) {
-                    this.showStatus('Invalid VTT format. Timestamps must use periods (.) not commas (,) for milliseconds. Example: "00:00:01.000" not "00:00:01,000". You may have an SRT file - please convert it to VTT format first.', 'error');
-                    return;
-                }
-
-                // Validation 3: Check for properly formatted timestamp lines with spaces around -->
+                // Enhanced VTT validation - check for properly formatted timestamp lines with spaces around -->
                 const properTimestampRegex = /[0-9:.]+\s+-->\s+[0-9:.]+/;
                 const hasProperTimestamps = properTimestampRegex.test(this.originalContent);
                 
