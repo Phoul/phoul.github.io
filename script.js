@@ -13,7 +13,7 @@ const linkSections = [
         links: [
             { text: "Twitch", url: "https://twitch.tv/opprimereu", icon: "fa-brands fa-twitch" },
             { text: "TGM Series", url: "https://theabsolute.plus/player/opprimereu", icon: "fa-solid fa-hat-wizard" },
-         { text: "DCSS", url: "https://dcss-stats.com/players/phoul", icon: "fa-solid fa-sword" }
+         { text: "DCSS", url: "https://dcss-stats.com/players/phoul", icon: "fa-solid fa-dice-d20" }
 
         ]
     },
