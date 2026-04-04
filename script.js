@@ -39,13 +39,13 @@ const linkSections = [
                 ]
             }
         ]
-    },
-    {
-        title: "Volunteering",
-        links: [
-            { text: "Prevent-A-Thon", url: "https://preventathon.com", icon: "fas fa-shield-alt" }
-        ]
     }
+   // {
+      //  title: "Volunteering",
+     //   links: [
+       //     { text: "Prevent-A-Thon", url: "https://preventathon.com", icon: "fas fa-shield-alt" }
+      //  ]
+  //  }
 ];
 
 // Generate link cards
