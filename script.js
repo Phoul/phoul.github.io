@@ -1,5 +1,12 @@
 // Links with categories
 const linkSections = [
+        {
+        title: "Blog",
+        links: [
+            { text: "alt.noire.link", url: "https://alt.noire.link", icon: "fa-solid fa-blog" }
+
+        ]
+    },
     {
         title: "Code",
         links: [
